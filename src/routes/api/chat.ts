@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { lovableChatCompletion, type ChatMsg } from "@/lib/ai-gateway.server";
-import { PORTFOLIO_SYSTEM_PROMPT } from "@/lib/portfolio-context";
+import type { ChatMsg } from "@/lib/ai-gateway.server";
 
 const Body = z.object({
   sessionId: z.string().uuid().optional(),
