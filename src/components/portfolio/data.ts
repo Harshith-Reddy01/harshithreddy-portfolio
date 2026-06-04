@@ -1,6 +1,6 @@
 export const PROFILE = {
   name: "Harshith Reddy Taduri",
-  title: "AI/ML Engineer · Data Scientist · Software Developer",
+  title: "AI/ML Engineer · Data Scientist · Python Developer",
   tagline: "Turning data into intelligent, real-world solutions.",
   intro:
     "I build AI and Machine Learning systems that solve real problems — from cybersecurity to computer vision and healthcare. Passionate about deep learning, data analytics, and shipping scalable software.",
