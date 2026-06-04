@@ -4,7 +4,7 @@ import { z } from "zod";
 import type { ChatMsg } from "@/lib/ai-gateway.server";
 
 const Body = z.object({
-  sessionId: z.string().uuid().optional(),
+  sessionId: z.string().uuid().nullish(),
   message: z.string().min(1).max(2000),
 });
 
