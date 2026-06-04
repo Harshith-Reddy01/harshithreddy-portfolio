@@ -4,7 +4,7 @@ import { z } from "zod";
 import type { ChatMsg } from "@/lib/ai-gateway.server";
 
 const Body = z.object({
-  sessionId: z.string().uuid().optional(),
+  sessionId: z.string().uuid().nullish(),
   message: z.string().min(1).max(2000),
 });
 
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         // Ensure a session exists.
-        let sessionId = payload.sessionId;
+        let sessionId = payload.sessionId ?? undefined;
         if (!sessionId) {
           const ua = request.headers.get("user-agent") ?? null;
           const { data, error } = await supabaseAdmin
