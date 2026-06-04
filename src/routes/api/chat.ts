@@ -12,6 +12,10 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { lovableChatCompletion } = await import("@/lib/ai-gateway.server");
+        const { PORTFOLIO_SYSTEM_PROMPT } = await import("@/lib/portfolio-context");
+
         let payload: z.infer<typeof Body>;
         try {
           payload = Body.parse(await request.json());
