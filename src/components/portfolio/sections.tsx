@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Github,
   Linkedin,
@@ -406,8 +406,64 @@ const SUGGESTED = [
   "Show Harshith's projects.",
 ];
 
+type ChatTurn = { role: "user" | "assistant"; content: string };
+
 export function AssistantSection() {
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<ChatTurn[]>([
+    {
+      role: "assistant",
+      content:
+        "Hi! I'm Harshith's AI assistant. Ask me anything about his projects, skills, or experience.",
+    },
+  ]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, loading]);
+
+  async function send(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
+    setMessages((m) => [...m, { role: "user", content: trimmed }]);
+    setInput("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, message: trimmed }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        sessionId?: string;
+        reply?: string;
+        message?: string;
+      };
+      if (!res.ok) {
+        setMessages((m) => [
+          ...m,
+          {
+            role: "assistant",
+            content: data.message ?? "Sorry, something went wrong. Please try again.",
+          },
+        ]);
+        return;
+      }
+      if (data.sessionId) setSessionId(data.sessionId);
+      setMessages((m) => [...m, { role: "assistant", content: data.reply ?? "" }]);
+    } catch {
+      setMessages((m) => [
+        ...m,
+        { role: "assistant", content: "Network error. Please try again." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <section id="assistant" className="py-20 sm:py-28 bg-muted/20 relative overflow-hidden">
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full gradient-primary opacity-10 blur-3xl" />
@@ -427,41 +483,51 @@ export function AssistantSection() {
               <p className="font-semibold text-sm">Harshith's AI Assistant</p>
               <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Online — Coming soon
+                Online
               </p>
             </div>
             <Sparkles className="w-4 h-4 text-primary" />
           </div>
 
-          <div className="p-5 space-y-4 min-h-[280px]">
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center text-primary-foreground shrink-0">
-                <Bot className="w-4 h-4" />
+          <div
+            ref={scrollRef}
+            className="p-5 space-y-4 min-h-[320px] max-h-[480px] overflow-y-auto"
+          >
+            {messages.map((m, i) =>
+              m.role === "assistant" ? (
+                <div key={i} className="flex gap-3">
+                  <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center text-primary-foreground shrink-0">
+                    <Bot className="w-4 h-4" />
+                  </div>
+                  <div className="max-w-md px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
+                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                  </div>
+                </div>
+              ) : (
+                <div key={i} className="flex gap-3 justify-end">
+                  <div className="max-w-md px-4 py-3 rounded-2xl rounded-tr-sm gradient-primary text-primary-foreground">
+                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0">
+                    <User className="w-4 h-4" />
+                  </div>
+                </div>
+              ),
+            )}
+            {loading && (
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center text-primary-foreground shrink-0">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
+                  <span className="inline-flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:120ms]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:240ms]" />
+                  </span>
+                </div>
               </div>
-              <div className="max-w-md px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
-                <p className="text-sm">
-                  Hi! I'm Harshith's AI assistant. Ask me anything about his projects, skills, or experience.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3 justify-end">
-              <div className="max-w-md px-4 py-3 rounded-2xl rounded-tr-sm gradient-primary text-primary-foreground">
-                <p className="text-sm">Tell me about Harshith's AI/ML projects.</p>
-              </div>
-              <div className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0">
-                <User className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center text-primary-foreground shrink-0">
-                <Bot className="w-4 h-4" />
-              </div>
-              <div className="max-w-md px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
-                <p className="text-sm text-muted-foreground italic">
-                  Chatbot backend not connected yet. This is a preview of the UI.
-                </p>
-              </div>
-            </div>
+            )}
           </div>
 
           <div className="px-5 py-3 border-t border-border">
@@ -470,8 +536,9 @@ export function AssistantSection() {
               {SUGGESTED.map((s) => (
                 <button
                   key={s}
-                  onClick={() => setInput(s)}
-                  className="px-3 py-1.5 rounded-full text-xs border border-border bg-muted hover:border-primary hover:text-primary transition-colors"
+                  onClick={() => send(s)}
+                  disabled={loading}
+                  className="px-3 py-1.5 rounded-full text-xs border border-border bg-muted hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
                 >
                   {s}
                 </button>
@@ -482,7 +549,7 @@ export function AssistantSection() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              setInput("");
+              send(input);
             }}
             className="p-3 border-t border-border flex gap-2 bg-muted/20"
           >
@@ -490,11 +557,13 @@ export function AssistantSection() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask anything about Harshith…"
-              className="flex-1 px-4 py-2.5 rounded-lg bg-input border border-border text-sm focus:outline-none focus:border-primary"
+              disabled={loading}
+              className="flex-1 px-4 py-2.5 rounded-lg bg-input border border-border text-sm focus:outline-none focus:border-primary disabled:opacity-60"
             />
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg gradient-primary text-primary-foreground text-sm font-medium hover:scale-105 transition-transform"
+              disabled={loading || !input.trim()}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg gradient-primary text-primary-foreground text-sm font-medium hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100"
               aria-label="Send"
             >
               <Send className="w-4 h-4" />
