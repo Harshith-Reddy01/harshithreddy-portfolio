@@ -24,7 +24,7 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         // Ensure a session exists.
-        let sessionId = payload.sessionId;
+        let sessionId = payload.sessionId ?? undefined;
         if (!sessionId) {
           const ua = request.headers.get("user-agent") ?? null;
           const { data, error } = await supabaseAdmin
