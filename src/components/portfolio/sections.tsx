@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Github,
   Linkedin,
@@ -15,7 +17,6 @@ import {
   Database,
   BarChart3,
   Wrench,
-  Globe,
   GraduationCap,
   Briefcase,
   Award,
@@ -37,11 +38,10 @@ import {
 
 const CATEGORY_ICONS: Record<string, typeof Code2> = {
   "Programming Languages": Code2,
-  "Machine Learning & AI": Brain,
-  "Data Analytics & Visualization": BarChart3,
+  "Machine Learning & Generative AI": Brain,
+  "Data Analysis & Visualization": BarChart3,
   Databases: Database,
-  "Web Development": Globe,
-  "Tools & Platforms": Wrench,
+  "Tools & Technologies": Wrench,
 };
 
 function SectionHeader({ kicker, title, subtitle }: { kicker: string; title: string; subtitle?: string }) {
@@ -153,9 +153,9 @@ export function Hero() {
 
 export function About() {
   const stats = [
-    { value: "3+", label: "AI/ML Projects" },
+    { value: "4+", label: "AI/ML Projects" },
     { value: "98%", label: "Best Model Accuracy" },
-    { value: "10+", label: "Technologies" },
+    { value: "15+", label: "Technologies" },
     { value: "4+", label: "Certifications" },
   ];
   return (
@@ -167,19 +167,19 @@ export function About() {
             <p>
               I'm a <span className="text-primary font-semibold">Computer Science graduate specializing in
               Artificial Intelligence & Machine Learning</span> from ACE Engineering College, with a strong
-              foundation in Python, deep learning, and data analytics.
+              foundation in Python, deep learning, generative AI, and data analytics.
             </p>
             <p>
-              My work spans <span className="text-primary font-semibold">cybersecurity, computer vision, and
-              healthcare</span> — I've built stacked deep learning models for IoT botnet detection,
-              YOLOv8-powered crowd monitoring on CCTV networks, and CNN-based medical imaging
-              classifiers for brain tumor detection.
+              My work spans <span className="text-primary font-semibold">cloud infrastructure, cybersecurity,
+              computer vision, and healthcare</span> — from an end-to-end AI-powered Infrastructure-as-Code
+              drift detection platform, to stacked deep learning models for IoT botnet detection,
+              YOLOv8-based crowd monitoring on CCTV networks, and CNN-based medical imaging classifiers.
             </p>
             <p>
               I love turning messy data into clean insights and intelligent products. I'm constantly learning
               — from new model architectures to scalable data pipelines — and I'm looking for roles where I
               can ship AI/ML systems that matter, whether as an{" "}
-              <span className="text-primary font-semibold">AI/ML Engineer, Data Analyst, or Software Developer</span>.
+              <span className="text-primary font-semibold">AI/ML Engineer, Data Scientist, or Python Developer</span>.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4 animate-fade-up">
@@ -221,14 +221,18 @@ export function Skills() {
                   <h3 className="font-semibold text-lg">{group.category}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {group.items.map((s) => (
-                    <span
-                      key={s}
-                      className="px-3 py-1 rounded-md text-xs font-mono bg-muted border border-border text-foreground/80 hover:border-primary hover:text-primary transition-colors"
-                    >
-                      {s}
-                    </span>
-                  ))}
+                  {group.items.map((s) => {
+                    const SkillIcon = s.icon;
+                    return (
+                      <span
+                        key={s.name}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono bg-muted border border-border text-foreground/80 hover:border-primary hover:text-primary transition-colors"
+                      >
+                        <SkillIcon className="w-3.5 h-3.5 text-primary" aria-hidden />
+                        {s.name}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -400,10 +404,10 @@ export function Education() {
 
 const SUGGESTED = [
   "Tell me about Harshith.",
-  "Explain the Botnet Detection project.",
-  "What technologies does Harshith know?",
-  "What are Harshith's AI/ML skills?",
-  "Show Harshith's projects.",
+  "Explain the IaC Drift Detector project.",
+  "What's Harshith's experience at SYNYCS?",
+  "List Harshith's AI/ML skills.",
+  "Show all of Harshith's projects.",
 ];
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
@@ -500,7 +504,9 @@ export function AssistantSection() {
                     <Bot className="w-4 h-4" />
                   </div>
                   <div className="max-w-md px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                    <div className="markdown-body text-sm leading-relaxed">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -578,11 +584,12 @@ export function AssistantSection() {
 
 export function ResumeSection() {
   const highlights = [
-    "AI/ML Engineer with deep learning expertise (CNN, RNN, LSTM, ANN)",
-    "Hands-on with Python, SQL, TensorFlow, Keras, Scikit-learn",
-    "Built ML systems in cybersecurity, computer vision, healthcare",
-    "Data analytics with Pandas, NumPy, Power BI dashboards",
-    "Certified by IIT Guwahati, CISCO, Cambridge",
+    "Built an end-to-end AI-powered IaC Drift Detection platform (LLMs + GNNs + FastAPI)",
+    "AI/ML Engineer with deep learning expertise (CNN, RNN, LSTM, ANN, GNN)",
+    "Hands-on with Python, SQL, TensorFlow, Keras, Scikit-learn, PyTorch",
+    "Generative AI: LLMs, Transformers, RAG, Prompt Engineering, Vector Databases",
+    "Data analytics with Pandas, NumPy, Power BI (DAX, modeling, KPI dashboards)",
+    "Certified by IIT Guwahati, CISCO (CLA, PCAP), Cambridge",
   ];
   return (
     <section id="resume" className="py-20 sm:py-28">
@@ -592,8 +599,9 @@ export function ResumeSection() {
           <div className="p-7 rounded-2xl bg-card border border-border shadow-card animate-fade-up">
             <h3 className="text-xl font-bold mb-2">Professional Summary</h3>
             <p className="text-muted-foreground mb-5">
-              AI/ML and Data Science engineer skilled in Python, deep learning, and data analytics.
-              Experienced building real-world solutions in cybersecurity, computer vision, and healthcare.
+              AI/ML and Data Science engineer skilled in Python, deep learning, generative AI,
+              and data analytics. Experienced building real-world solutions across cloud
+              infrastructure, cybersecurity, computer vision, and healthcare.
             </p>
             <h4 className="font-semibold mb-3">Key Highlights</h4>
             <ul className="space-y-2 mb-6">
@@ -634,12 +642,14 @@ export function ResumeSection() {
               <div className="h-px bg-border" />
               <p className="text-foreground font-semibold">CAREER SUMMARY</p>
               <p className="line-clamp-3">
-                AI/ML and Data Science Engineer with hands-on experience in machine learning, deep learning, and data analysis…
+                AI/ML & Data Science engineer with hands-on experience in ML, Deep Learning, Generative AI, and Data Analysis across cloud, cybersecurity, vision, and healthcare…
               </p>
               <p className="text-foreground font-semibold mt-2">SKILLS</p>
-              <p className="line-clamp-2">Python, SQL, TensorFlow, Keras, Scikit-learn, Pandas, NumPy, Power BI…</p>
+              <p className="line-clamp-2">Python, SQL, TensorFlow, Keras, PyTorch, Scikit-learn, LLMs, RAG, Pandas, NumPy, Power BI, FastAPI, Docker, Terraform…</p>
               <p className="text-foreground font-semibold mt-2">PROJECTS</p>
-              <p className="line-clamp-2">Botnet Detection · Crowd Management · Neurofibroma Classification</p>
+              <p className="line-clamp-2">IaC Generator & Drift Detector · Botnet Detection · Crowd Management · Neurofibroma Classification</p>
+              <p className="text-foreground font-semibold mt-2">EXPERIENCE</p>
+              <p className="line-clamp-2">AI Intern @ SYNYCS · Data Science Intern @ Infoz IT Solutions</p>
             </div>
             <p className="mt-4 text-sm text-primary inline-flex items-center gap-1 group-hover:gap-2 transition-all">
               Open full resume <ArrowRight className="w-4 h-4" />
@@ -652,7 +662,43 @@ export function ResumeSection() {
 }
 
 export function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get("name") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      message: String(fd.get("message") ?? "").trim(),
+    };
+    if (!payload.name || !payload.email || !payload.message) return;
+
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json().catch(() => ({}))) as { message?: string };
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMsg(data.message ?? "Something went wrong. Please try again.");
+        return;
+      }
+      setStatus("sent");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error. Please try again or email me directly.");
+    }
+  }
+
   return (
     <section id="contact" className="py-20 sm:py-28 bg-muted/20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -692,31 +738,35 @@ export function Contact() {
           </div>
 
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSent(true);
-              setTimeout(() => setSent(false), 3000);
-              (e.target as HTMLFormElement).reset();
-            }}
+            onSubmit={handleSubmit}
             className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-card space-y-4 animate-fade-up"
           >
             <div>
               <label htmlFor="name" className="text-sm font-medium">Name</label>
-              <input id="name" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="Your name" />
+              <input id="name" name="name" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="Your name" />
             </div>
             <div>
               <label htmlFor="email" className="text-sm font-medium">Email</label>
-              <input id="email" type="email" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="you@company.com" />
+              <input id="email" name="email" type="email" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="you@company.com" />
             </div>
             <div>
               <label htmlFor="message" className="text-sm font-medium">Message</label>
-              <textarea id="message" required rows={5} className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary resize-none" placeholder="Tell me about the opportunity…" />
+              <textarea id="message" name="message" required rows={5} className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary resize-none" placeholder="Tell me about the opportunity…" />
             </div>
+            {status === "error" && (
+              <p className="text-sm text-destructive">{errorMsg}</p>
+            )}
+            {status === "sent" && (
+              <p className="text-sm text-primary">
+                Thanks! Your message was received — Harshith will get back to you soon.
+              </p>
+            )}
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-medium shadow-glow hover:scale-[1.02] transition-transform"
+              disabled={status === "sending"}
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-medium shadow-glow hover:scale-[1.02] transition-transform disabled:opacity-60 disabled:hover:scale-100"
             >
-              {sent ? "Message sent ✓" : (<>Send Message <Send className="w-4 h-4" /></>)}
+              {status === "sending" ? "Sending…" : status === "sent" ? "Message sent ✓" : (<>Send Message <Send className="w-4 h-4" /></>)}
             </button>
           </form>
         </div>
