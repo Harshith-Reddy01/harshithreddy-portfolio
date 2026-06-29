@@ -599,8 +599,9 @@ export function ResumeSection() {
           <div className="p-7 rounded-2xl bg-card border border-border shadow-card animate-fade-up">
             <h3 className="text-xl font-bold mb-2">Professional Summary</h3>
             <p className="text-muted-foreground mb-5">
-              AI/ML and Data Science engineer skilled in Python, deep learning, and data analytics.
-              Experienced building real-world solutions in cybersecurity, computer vision, and healthcare.
+              AI/ML and Data Science engineer skilled in Python, deep learning, generative AI,
+              and data analytics. Experienced building real-world solutions across cloud
+              infrastructure, cybersecurity, computer vision, and healthcare.
             </p>
             <h4 className="font-semibold mb-3">Key Highlights</h4>
             <ul className="space-y-2 mb-6">
@@ -641,12 +642,14 @@ export function ResumeSection() {
               <div className="h-px bg-border" />
               <p className="text-foreground font-semibold">CAREER SUMMARY</p>
               <p className="line-clamp-3">
-                AI/ML and Data Science Engineer with hands-on experience in machine learning, deep learning, and data analysis…
+                AI/ML & Data Science engineer with hands-on experience in ML, Deep Learning, Generative AI, and Data Analysis across cloud, cybersecurity, vision, and healthcare…
               </p>
               <p className="text-foreground font-semibold mt-2">SKILLS</p>
-              <p className="line-clamp-2">Python, SQL, TensorFlow, Keras, Scikit-learn, Pandas, NumPy, Power BI…</p>
+              <p className="line-clamp-2">Python, SQL, TensorFlow, Keras, PyTorch, Scikit-learn, LLMs, RAG, Pandas, NumPy, Power BI, FastAPI, Docker, Terraform…</p>
               <p className="text-foreground font-semibold mt-2">PROJECTS</p>
-              <p className="line-clamp-2">Botnet Detection · Crowd Management · Neurofibroma Classification</p>
+              <p className="line-clamp-2">IaC Generator & Drift Detector · Botnet Detection · Crowd Management · Neurofibroma Classification</p>
+              <p className="text-foreground font-semibold mt-2">EXPERIENCE</p>
+              <p className="line-clamp-2">AI Intern @ SYNYCS · Data Science Intern @ Infoz IT Solutions</p>
             </div>
             <p className="mt-4 text-sm text-primary inline-flex items-center gap-1 group-hover:gap-2 transition-all">
               Open full resume <ArrowRight className="w-4 h-4" />
