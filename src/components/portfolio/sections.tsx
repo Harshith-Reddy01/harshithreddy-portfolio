@@ -662,7 +662,43 @@ export function ResumeSection() {
 }
 
 export function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get("name") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      message: String(fd.get("message") ?? "").trim(),
+    };
+    if (!payload.name || !payload.email || !payload.message) return;
+
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json().catch(() => ({}))) as { message?: string };
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMsg(data.message ?? "Something went wrong. Please try again.");
+        return;
+      }
+      setStatus("sent");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error. Please try again or email me directly.");
+    }
+  }
+
   return (
     <section id="contact" className="py-20 sm:py-28 bg-muted/20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -702,31 +738,35 @@ export function Contact() {
           </div>
 
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSent(true);
-              setTimeout(() => setSent(false), 3000);
-              (e.target as HTMLFormElement).reset();
-            }}
+            onSubmit={handleSubmit}
             className="p-6 sm:p-7 rounded-2xl bg-card border border-border shadow-card space-y-4 animate-fade-up"
           >
             <div>
               <label htmlFor="name" className="text-sm font-medium">Name</label>
-              <input id="name" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="Your name" />
+              <input id="name" name="name" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="Your name" />
             </div>
             <div>
               <label htmlFor="email" className="text-sm font-medium">Email</label>
-              <input id="email" type="email" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="you@company.com" />
+              <input id="email" name="email" type="email" required className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary" placeholder="you@company.com" />
             </div>
             <div>
               <label htmlFor="message" className="text-sm font-medium">Message</label>
-              <textarea id="message" required rows={5} className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary resize-none" placeholder="Tell me about the opportunity…" />
+              <textarea id="message" name="message" required rows={5} className="mt-1.5 w-full px-4 py-2.5 rounded-lg bg-input border border-border focus:outline-none focus:border-primary resize-none" placeholder="Tell me about the opportunity…" />
             </div>
+            {status === "error" && (
+              <p className="text-sm text-destructive">{errorMsg}</p>
+            )}
+            {status === "sent" && (
+              <p className="text-sm text-primary">
+                Thanks! Your message was received — Harshith will get back to you soon.
+              </p>
+            )}
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-medium shadow-glow hover:scale-[1.02] transition-transform"
+              disabled={status === "sending"}
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg gradient-primary text-primary-foreground font-medium shadow-glow hover:scale-[1.02] transition-transform disabled:opacity-60 disabled:hover:scale-100"
             >
-              {sent ? "Message sent ✓" : (<>Send Message <Send className="w-4 h-4" /></>)}
+              {status === "sending" ? "Sending…" : status === "sent" ? "Message sent ✓" : (<>Send Message <Send className="w-4 h-4" /></>)}
             </button>
           </form>
         </div>
