@@ -404,10 +404,10 @@ export function Education() {
 
 const SUGGESTED = [
   "Tell me about Harshith.",
-  "Explain the Botnet Detection project.",
-  "What technologies does Harshith know?",
-  "What are Harshith's AI/ML skills?",
-  "Show Harshith's projects.",
+  "Explain the IaC Drift Detector project.",
+  "What's Harshith's experience at SYNYCS?",
+  "List Harshith's AI/ML skills.",
+  "Show all of Harshith's projects.",
 ];
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
@@ -504,7 +504,9 @@ export function AssistantSection() {
                     <Bot className="w-4 h-4" />
                   </div>
                   <div className="max-w-md px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                    <div className="text-sm leading-relaxed prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-headings:mt-2 prose-headings:mb-1 prose-headings:text-foreground prose-strong:text-foreground prose-code:text-primary prose-code:before:content-none prose-code:after:content-none prose-code:bg-background/60 prose-code:px-1 prose-code:py-0.5 prose-code:rounded">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -582,11 +584,12 @@ export function AssistantSection() {
 
 export function ResumeSection() {
   const highlights = [
-    "AI/ML Engineer with deep learning expertise (CNN, RNN, LSTM, ANN)",
-    "Hands-on with Python, SQL, TensorFlow, Keras, Scikit-learn",
-    "Built ML systems in cybersecurity, computer vision, healthcare",
-    "Data analytics with Pandas, NumPy, Power BI dashboards",
-    "Certified by IIT Guwahati, CISCO, Cambridge",
+    "Built an end-to-end AI-powered IaC Drift Detection platform (LLMs + GNNs + FastAPI)",
+    "AI/ML Engineer with deep learning expertise (CNN, RNN, LSTM, ANN, GNN)",
+    "Hands-on with Python, SQL, TensorFlow, Keras, Scikit-learn, PyTorch",
+    "Generative AI: LLMs, Transformers, RAG, Prompt Engineering, Vector Databases",
+    "Data analytics with Pandas, NumPy, Power BI (DAX, modeling, KPI dashboards)",
+    "Certified by IIT Guwahati, CISCO (CLA, PCAP), Cambridge",
   ];
   return (
     <section id="resume" className="py-20 sm:py-28">
