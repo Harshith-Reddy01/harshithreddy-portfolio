@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Github,
   Linkedin,
@@ -15,7 +17,6 @@ import {
   Database,
   BarChart3,
   Wrench,
-  Globe,
   GraduationCap,
   Briefcase,
   Award,
@@ -37,11 +38,10 @@ import {
 
 const CATEGORY_ICONS: Record<string, typeof Code2> = {
   "Programming Languages": Code2,
-  "Machine Learning & AI": Brain,
-  "Data Analytics & Visualization": BarChart3,
+  "Machine Learning & Generative AI": Brain,
+  "Data Analysis & Visualization": BarChart3,
   Databases: Database,
-  "Web Development": Globe,
-  "Tools & Platforms": Wrench,
+  "Tools & Technologies": Wrench,
 };
 
 function SectionHeader({ kicker, title, subtitle }: { kicker: string; title: string; subtitle?: string }) {
@@ -153,9 +153,9 @@ export function Hero() {
 
 export function About() {
   const stats = [
-    { value: "3+", label: "AI/ML Projects" },
+    { value: "4+", label: "AI/ML Projects" },
     { value: "98%", label: "Best Model Accuracy" },
-    { value: "10+", label: "Technologies" },
+    { value: "15+", label: "Technologies" },
     { value: "4+", label: "Certifications" },
   ];
   return (
@@ -167,19 +167,19 @@ export function About() {
             <p>
               I'm a <span className="text-primary font-semibold">Computer Science graduate specializing in
               Artificial Intelligence & Machine Learning</span> from ACE Engineering College, with a strong
-              foundation in Python, deep learning, and data analytics.
+              foundation in Python, deep learning, generative AI, and data analytics.
             </p>
             <p>
-              My work spans <span className="text-primary font-semibold">cybersecurity, computer vision, and
-              healthcare</span> — I've built stacked deep learning models for IoT botnet detection,
-              YOLOv8-powered crowd monitoring on CCTV networks, and CNN-based medical imaging
-              classifiers for brain tumor detection.
+              My work spans <span className="text-primary font-semibold">cloud infrastructure, cybersecurity,
+              computer vision, and healthcare</span> — from an end-to-end AI-powered Infrastructure-as-Code
+              drift detection platform, to stacked deep learning models for IoT botnet detection,
+              YOLOv8-based crowd monitoring on CCTV networks, and CNN-based medical imaging classifiers.
             </p>
             <p>
               I love turning messy data into clean insights and intelligent products. I'm constantly learning
               — from new model architectures to scalable data pipelines — and I'm looking for roles where I
               can ship AI/ML systems that matter, whether as an{" "}
-              <span className="text-primary font-semibold">AI/ML Engineer, Data Analyst, or Software Developer</span>.
+              <span className="text-primary font-semibold">AI/ML Engineer, Data Scientist, or Python Developer</span>.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4 animate-fade-up">
@@ -221,14 +221,18 @@ export function Skills() {
                   <h3 className="font-semibold text-lg">{group.category}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {group.items.map((s) => (
-                    <span
-                      key={s}
-                      className="px-3 py-1 rounded-md text-xs font-mono bg-muted border border-border text-foreground/80 hover:border-primary hover:text-primary transition-colors"
-                    >
-                      {s}
-                    </span>
-                  ))}
+                  {group.items.map((s) => {
+                    const SkillIcon = s.icon;
+                    return (
+                      <span
+                        key={s.name}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono bg-muted border border-border text-foreground/80 hover:border-primary hover:text-primary transition-colors"
+                      >
+                        <SkillIcon className="w-3.5 h-3.5 text-primary" aria-hidden />
+                        {s.name}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             );
