@@ -504,7 +504,7 @@ export function AssistantSection() {
                     <Bot className="w-4 h-4" />
                   </div>
                   <div className="max-w-md px-4 py-3 rounded-2xl rounded-tl-sm bg-muted border border-border">
-                    <div className="text-sm leading-relaxed prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-headings:mt-2 prose-headings:mb-1 prose-headings:text-foreground prose-strong:text-foreground prose-code:text-primary prose-code:before:content-none prose-code:after:content-none prose-code:bg-background/60 prose-code:px-1 prose-code:py-0.5 prose-code:rounded">
+                    <div className="markdown-body text-sm leading-relaxed">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
                     </div>
                   </div>
